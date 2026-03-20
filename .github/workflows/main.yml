@@ -1,32 +1,29 @@
-name: Build_4K_Shorts
+name: AI_Chat_Factory
 on:
   workflow_dispatch:
+    inputs:
+      chat_command:
+        description: '영상의 제목을 영어로 입력하세요'
+        required: true
+        default: 'Limited Offer! Buy Now'
 
 jobs:
-  render:
+  run-ai:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
+      - name: Setup
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
-
-      - name: Install System Tools
+      - name: Install
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-
-      - name: Install Python Libraries
-        run: |
-          pip install requests Pillow edge-tts moviepy==1.0.3
-
-      - name: Run Factory
-        run: python auto_promo_factory.py
-
-      - name: Upload Video Result
+          pip install requests edge-tts moviepy==1.0.3
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Execute
+        run: python auto_promo_factory.py "${{ github.event.inputs.chat_command }}"
+      - name: Save
         uses: actions/upload-artifact@v4
         with:
-          name: my-video
+          name: ai-video-result
           path: shorts_promo.mp4
