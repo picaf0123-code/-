@@ -1,30 +1,24 @@
 import asyncio, edge_tts, requests, os, sys, random
 from moviepy.editor import ImageClip, AudioFileClip
 
-# [AI 두뇌] 영상 제작 핵심 함수
-async def create_ai_video(text):
-    print(f"\n🤖 AI 수리공: '{text}' 명령을 접수했습니다. 작업 시작!")
+async def talk_with_user(text):
+    print(f"\n💬 명령 수신: {text}")
     
-    try:
-        # 1. 한국어 음성 생성 (선희 목소리)
-        voice_file = "voice.mp3"
-        communicate = edge_tts.Communicate(text, "ko-KR-SunHiNeural")
-        await communicate.save(voice_file)
-        
-        # 2. 랜덤 배경 이미지 가져오기 (고화질 세로형)
-        img_file = "temp_bg.jpg"
-        img_url = f"https://picsum.photos/1080/1920?sig={random.randint(1, 9999)}"
-        r = requests.get(img_url, timeout=15)
-        with open(img_file, "wb") as f:
-            f.write(r.content)
+    # 1. 한국어 음성 생성
+    communicate = edge_tts.Communicate(text, "ko-KR-SunHiNeural")
+    await communicate.save("voice.mp3")
+    
+    # 2. 이미지 가져오기
+    img_url = f"https://picsum.photos/1080/1920?sig={random.randint(1, 9999)}"
+    r = requests.get(img_url)
+    with open("temp.jpg", "wb") as f: f.write(r.content)
 
-        # 3. 목소리에 맞춰 영상 조립
-        audio = AudioFileClip(voice_file)
-        clip = ImageClip(img_file).set_duration(audio.duration).set_audio(audio)
-        
-        output_name = "ai_result.mp4"
-        clip.write_videofile(output_name, fps=24, codec="libx264", logger=None)
-        
-        print(f"✅ AI 수리공: 영상 제작 완료! 파일명: {output_name}")
-        
-    except Exception
+    # 3. 조립 (파일명: ai_result.mp4)
+    audio = AudioFileClip("voice.mp3")
+    clip = ImageClip("temp.jpg").set_duration(audio.duration).set_audio(audio)
+    clip.write_videofile("ai_result.mp4", fps=24, codec="libx264", logger=None)
+    print(f"✅ 영상 제작 끝! 이제 결과물을 확인하세요.")
+
+if __name__ == "__main__":
+    user_msg = sys.argv[1] if len(sys.argv) > 1 else "명령 대기 중"
+    asyncio.run(talk_with_user(user_msg))
