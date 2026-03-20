@@ -1,9 +1,8 @@
 import asyncio
 import edge_tts
 import requests
-from moviepy.editor import ImageClip, AudioFileClip, CompositeAudioClip
-from PIL import Image
-from io import BytesIO
+from moviepy.editor import ImageClip, AudioFileClip
+import os
 
 # [설정]
 PROMO_SCRIPT = "Looking for a new laptop? Don't miss this limited offer! Click the link below."
@@ -17,19 +16,18 @@ async def auto_promo_factory():
     communicate = edge_tts.Communicate(PROMO_SCRIPT, VOICE)
     await communicate.save("voice.mp3")
     
-    # 2. 이미지 생성
-    prompt = "laptop_advertisement_cinematic"
-    image_url = f"https://pollinations.ai/p/{prompt}"
+    # 2. 이미지 다운로드
+    image_url = "https://picsum.photos/1080/1920"
     img_data = requests.get(image_url).content
     with open("ai_generated.jpg", "wb") as f:
         f.write(img_data)
     
-    # 3. 합성
+    # 3. 영상 합성
     audio = AudioFileClip("voice.mp3")
     clip = ImageClip("ai_generated.jpg").set_duration(audio.duration)
     clip = clip.set_audio(audio)
     
-    # 4. 파일 쓰기
+    # 4. 파일 저장
     clip.write_videofile(OUTPUT_VIDEO, fps=24, codec="libx264")
     print("🎬 제작 완료!")
 
