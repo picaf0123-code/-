@@ -1,5 +1,6 @@
 name: Build_4K_Shorts
-on: workflow_dispatch
+on:
+  workflow_dispatch:
 
 jobs:
   render:
@@ -9,4 +10,4 @@ jobs:
       - name: Install FFmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Run Factory
-        run: python 메인.py
+        run: python main.py
