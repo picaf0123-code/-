@@ -17,8 +17,11 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install Tools
+      - name: Install Tools
         run: |
-          pip install edge-tts moviepy requests
+          python -m pip install --upgrade pip
+          pip install moviepy==1.0.3 requests edge-tts Pillow
+
       - name: Create Video
         run: |
           # 소통 두뇌에 당신의 명령을 전달합니다!
