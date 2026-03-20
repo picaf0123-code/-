@@ -3,27 +3,27 @@ on:
   workflow_dispatch:
     inputs:
       chat_command:
-        description: '영상의 제목을 영어로 입력하세요'
+        description: '영상의 내용을 입력하세요'
         required: true
-        default: 'Limited Offer! Buy Now'
+        default: '안녕하세요'
 
 jobs:
   run-ai:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Install
+      - name: Install Tools
         run: |
-          pip install requests edge-tts moviepy==1.0.3
-          sudo apt-get update && sudo apt-get install -y ffmpeg
-      - name: Execute
-        run: python auto_promo_factory.py "${{ github.event.inputs.chat_command }}"
-      - name: Save
-        uses: actions/upload-artifact@v4
+          pip install edge-tts moviepy requests
+      - name: Create Video
+        run: |
+          python auto_promo_factory.py "${{ github.event.inputs.chat_command }}"
+      - name: Upload Result
+        uses: actions/upload-artifact@v3
         with:
           name: ai-video-result
-          path: shorts_promo.mp4
+          path: result.mp4
