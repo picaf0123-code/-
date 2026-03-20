@@ -11,12 +11,13 @@ jobs:
   run-ai:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # 최신 버전으로 교체
+      - uses: actions/checkout@v4
+
       - name: Python Setup
-        uses: actions/setup-python@v5 # 최신 버전으로 교체
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Install Tools
+
       - name: Install Tools
         run: |
           python -m pip install --upgrade pip
@@ -24,10 +25,10 @@ jobs:
 
       - name: Create Video
         run: |
-          # 소통 두뇌에 당신의 명령을 전달합니다!
           python auto_promo_factory.py "${{ github.event.inputs.chat_command }}"
+
       - name: Upload Result
-        uses: actions/upload-artifact@v4 # 🚨 여기서 v4로 바꿔야 에러가 안 납니다!
+        uses: actions/upload-artifact@v4
         with:
           name: ai-video-result
           path: ai_result.mp4
