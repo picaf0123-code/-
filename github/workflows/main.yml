@@ -1,0 +1,12 @@
+name: Build_4K_Shorts
+on: workflow_dispatch
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Run Factory
+        run: python 메인.py
